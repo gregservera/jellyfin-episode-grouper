@@ -110,12 +110,16 @@ def group_episodes(episode_ids: List[str]):
 
 series_list = list_series()
 
+print(f"Found {len(series_list)} shows")
 for series in series_list:
+    print(f"Show: {series["Name"]}")
     series_id = series["Id"]
     seasons = list_seasons(series_id)
     for season in seasons:
         season_id = season["Id"]
+        season_number = season["IndexNumber"] if "IndexNumber" in season.keys() else "?"
         episodes = list_episodes(season_id, series_id)
+        print(f"  Season {season_number} ({len(episodes)} episodes)")
         episode_imdb_map = {}
         for ep in episodes:
             episode_id = ep["Id"]
@@ -130,14 +134,17 @@ for series in series_list:
 
             if not provider_id in episode_imdb_map:
                 episode_imdb_map[provider_id] = []
+                episode_number = episode["IndexNumber"] if "IndexNumber" in episode.keys() else "?"
             episode_imdb_map[provider_id].append(
                 {
                     "name": episode_name,
                     "id": episode_id,
+                    "index": episode_number
                 }
             )
 
         for episodes in episode_imdb_map.values():
             if len(episodes) > 1:
+                print(f"  S{season_number}E{episodes[0]["index"]}: {len(episodes)} versions")
                 episode_ids = [episode["id"] for episode in episodes]
                 group_episodes(episode_ids)

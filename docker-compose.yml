@@ -1,0 +1,8 @@
+name: jellyfin-episode-grouper
+services:
+  app:
+    stdin_open: true
+    tty: true
+    container_name: jellyfin-episode-grouper
+    build: .
+    image: python:3
